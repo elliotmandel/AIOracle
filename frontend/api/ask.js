@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   // Enable CORS for production
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -97,4 +97,4 @@ export default async function handler(req, res) {
       fallback: 'The cosmic energies are in flux. Perhaps try asking your question in a different way.'
     });
   }
-}
+};

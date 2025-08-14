@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   // Enable CORS for production
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -32,4 +32,4 @@ export default async function handler(req, res) {
     console.error('Spend coins error:', error);
     res.status(500).json({ success: false, error: 'Failed to spend coins' });
   }
-}
+};
