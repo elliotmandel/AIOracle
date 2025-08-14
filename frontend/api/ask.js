@@ -1,9 +1,3 @@
-const { ResponseProcessor } = require('../../backend/services/responseProcessor');
-const { DatabaseService } = require('../../backend/models/database');
-
-let responseProcessor;
-let dbService;
-
 export default async function handler(req, res) {
   // Enable CORS for production
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -19,14 +13,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Initialize services if not already done
-    if (!responseProcessor) {
-      responseProcessor = new ResponseProcessor();
-    }
-    if (!dbService) {
-      dbService = new DatabaseService();
-    }
-
     const { question, sessionId, offerings = [], enhancements = null, enhancement = null } = req.body;
 
     if (!question || question.trim().length === 0) {
@@ -43,48 +29,63 @@ export default async function handler(req, res) {
       });
     }
 
-    let currentSessionId = sessionId;
-    if (!currentSessionId) {
-      currentSessionId = await dbService.createSession();
-    } else {
-      await dbService.updateSessionActivity(currentSessionId);
+    console.log('Processing question:', question);
+    console.log('Enhancement received:', enhancement);
+    
+    // Mock session handling
+    const currentSessionId = sessionId || `session_${Date.now()}`;
+    
+    // Simulate processing delay
+    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
+    
+    // Mock Oracle responses with persona variety
+    const personas = [
+      { name: 'The Mystic Seer', type: 'mystical' },
+      { name: 'The Ancient Oracle', type: 'ancient' },
+      { name: 'The Cosmic Guide', type: 'cosmic' },
+      { name: 'The Ethereal Whisper', type: 'ethereal' },
+      { name: 'The Sage of Time', type: 'temporal' }
+    ];
+    
+    const selectedPersona = personas[Math.floor(Math.random() * personas.length)];
+    
+    // Generate mock response
+    const responses = [
+      "The threads of fate weave intricate patterns around your inquiry. I sense great potential in the path ahead.",
+      "The cosmos whispers of change approaching. Embrace the uncertainty, for it carries hidden gifts.",
+      "Ancient wisdom speaks through the mists of time. Your journey requires patience and inner strength.",
+      "The ethereal realm reveals multiple possibilities. Trust your intuition to guide you forward.",
+      "Time flows like a river, carrying opportunities. Be ready to seize the moment when it presents itself."
+    ];
+    
+    let response = responses[Math.floor(Math.random() * responses.length)];
+    
+    // Add Good Omens if enhancement is active
+    if (enhancement?.type === 'good_omens' || enhancements?.good_omens) {
+      const omens = [
+        "🌟 Watch for a meaningful conversation with a stranger that provides unexpected insight",
+        "🦋 Notice when animals or nature seem to acknowledge your presence - this signals alignment",
+        "✨ Pay attention to repeated numbers or symbols appearing in your daily life"
+      ];
+      response += "\n\n🌟 **Three Omens to Watch For:**\n" + omens.join("\n");
     }
-
-    // Convert single enhancement to enhancements format for backward compatibility
-    let finalEnhancements = enhancements;
-    if (enhancement && enhancement.type) {
-      console.log('Enhancement received:', enhancement);
-      // Map enhancement types to offerings for the processor
-      const enhancementMap = {
-        'rare_persona': 'rare_persona',
-        'good_omens': 'good_omens'
-      };
-      
-      if (enhancementMap[enhancement.type]) {
-        const enhancementOffering = enhancementMap[enhancement.type];
-        finalEnhancements = { [enhancementOffering]: true };
-        console.log('Final enhancements:', finalEnhancements);
-      }
-    }
-
-    const result = await responseProcessor.processQuestion(question, currentSessionId, offerings, finalEnhancements);
-
-    if (result.success) {
-      const questionId = await dbService.saveQuestion({
+    
+    const result = {
+      success: true,
+      response: response,
+      metadata: {
+        persona: selectedPersona.name,
+        personaType: selectedPersona.type,
+        responseType: enhancement?.type === 'good_omens' ? 'enhanced_omens' : 'standard',
+        themes: ['guidance', 'wisdom', 'future'],
+        sentiment: 'positive',
+        mood: 'mystical',
+        processingTime: Math.floor(1000 + Math.random() * 2000),
+        questionId: `q_${Date.now()}`,
         sessionId: currentSessionId,
-        question: question.trim(),
-        response: result.response,
-        persona: result.metadata.persona,
-        responseType: result.metadata.responseType,
-        themes: result.metadata.themes,
-        sentiment: result.metadata.sentiment,
-        mood: result.metadata.mood,
-        processingTime: result.metadata.processingTime
-      });
-
-      result.metadata.questionId = questionId;
-      result.metadata.sessionId = currentSessionId;
-    }
+        timestamp: new Date().toISOString()
+      }
+    };
 
     res.json(result);
 

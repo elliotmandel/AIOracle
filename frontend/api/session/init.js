@@ -1,7 +1,3 @@
-const { OfferingsService } = require('../../../backend/services/offeringsService');
-
-let offeringsService;
-
 export default async function handler(req, res) {
   // Enable CORS for production
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -17,19 +13,37 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Initialize offerings service if not already done
-    if (!offeringsService) {
-      offeringsService = new OfferingsService();
-    }
-
     const { anonymousId, localData } = req.body;
     
-    const sessionData = await offeringsService.initializeSession(anonymousId, localData);
+    // Simple in-memory session for serverless
+    const sessionId = anonymousId || `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    const sessionData = {
+      sessionId,
+      coins: 15,
+      isNewUser: true,
+      createdAt: new Date().toISOString()
+    };
+    
+    const offerings = [
+      {
+        id: 'rare_persona',
+        cost: 10,
+        name: 'Rare Persona',
+        description: 'Unlock a rare mystical persona'
+      },
+      {
+        id: 'good_omens',
+        cost: 25,
+        name: 'Good Omens',
+        description: 'Receive three omens with your reading'
+      }
+    ];
     
     res.json({
       success: true,
       session: sessionData,
-      offerings: offeringsService.getAvailableOfferings()
+      offerings
     });
   } catch (error) {
     console.error('Session initialization error:', error);
