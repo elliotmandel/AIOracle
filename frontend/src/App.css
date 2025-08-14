@@ -729,31 +729,63 @@ body::before {
 }
 
 @media (max-width: 768px) {
+  .App {
+    padding: 8px;
+    align-items: flex-start;
+  }
+  
   .oracle-container {
-    padding: 24px;
-    margin: 16px;
-    border-radius: 20px;
+    padding: 16px;
+    margin: 0;
+    border-radius: 16px;
+    min-height: calc(100vh - 16px);
+  }
+  
+  .oracle-header {
+    margin-bottom: 20px;
   }
   
   .oracle-title {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+  }
+  
+  .oracle-subtitle {
+    font-size: 1rem;
   }
   
   .question-input {
-    min-height: 120px;
+    min-height: 100px;
     font-size: 1rem;
-    padding: 20px;
+    padding: 16px;
   }
   
   .response-text {
-    font-size: 1.125rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+  
+  .response-container {
+    padding: 20px;
+  }
+  
+  .oracle-question {
+    padding: 16px 20px;
+    margin-bottom: 20px;
   }
   
   .mood-indicator {
     position: static;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     text-align: center;
     align-self: center;
+    padding: 10px 16px;
+    font-size: 0.8rem;
+  }
+  
+  .feedback-section {
+    margin-top: 20px;
+    padding-top: 16px;
   }
   
   .feedback-buttons {
@@ -763,15 +795,62 @@ body::before {
   
   .feedback-button {
     justify-content: center;
+    padding: 12px 16px;
   }
   
   .response-controls {
     justify-content: center;
+    margin-bottom: 12px;
   }
   
   .speech-button {
-    padding: 14px 24px;
+    padding: 12px 20px;
     font-size: 0.9rem;
+  }
+  
+  .response-metadata {
+    margin-top: 16px;
+    padding-top: 12px;
+  }
+  
+  .metadata-item {
+    margin-bottom: 6px;
+    font-size: 0.8rem;
+  }
+}
+
+/* Extra small phones */
+@media (max-width: 480px) {
+  .App {
+    padding: 4px;
+  }
+  
+  .oracle-container {
+    padding: 12px;
+    border-radius: 12px;
+    min-height: calc(100vh - 8px);
+  }
+  
+  .oracle-title {
+    font-size: 1.8rem;
+  }
+  
+  .oracle-header {
+    margin-bottom: 16px;
+  }
+  
+  .question-input {
+    min-height: 90px;
+    padding: 14px;
+  }
+  
+  .response-container {
+    padding: 16px;
+  }
+  
+  .oracle-question {
+    padding: 12px 16px;
+    margin-bottom: 16px;
   }
 }
 
