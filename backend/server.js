@@ -15,7 +15,9 @@ const corsOptions = {
     ? [
         process.env.FRONTEND_URL,
         /\.vercel\.app$/,
-        /\.railway\.app$/
+        /\.railway\.app$/,
+        'https://mydailydelphi.com',
+        'https://www.mydailydelphi.com'
       ]
     : [
         'http://localhost:3000',
