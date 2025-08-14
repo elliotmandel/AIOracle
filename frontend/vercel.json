@@ -11,15 +11,11 @@
       }
     },
     {
-      "src": "../backend/server.js",
+      "src": "api/**/*.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "../backend/server.js"
-    },
     {
       "src": "/static/(.*)",
       "headers": {
