@@ -3,7 +3,6 @@ import { useOracle } from './OracleContext';
 
 const QuestionForm = ({ onQuestionSubmit, onShowEnhancements, activeEnhancement }) => {
   const [question, setQuestion] = useState('');
-  const [lastQuestion, setLastQuestion] = useState('');
   const { isLoading } = useOracle();
 
   const handleSubmit = async (e) => {
@@ -13,7 +12,6 @@ const QuestionForm = ({ onQuestionSubmit, onShowEnhancements, activeEnhancement 
       return;
     }
 
-    setLastQuestion(question);
     await onQuestionSubmit(question);
     setQuestion('');
   };

@@ -10,10 +10,8 @@ import offeringsService from '../services/offeringsService';
 const OracleInterface = () => {
   const { oracleState, isLoading, error, clearError, askQuestion } = useOracle();
   const [currentResponse, setCurrentResponse] = useState(null);
-  const [sessionData, setSessionData] = useState(null);
   const [newEarnings, setNewEarnings] = useState([]);
   const [showRedemptionsModal, setShowRedemptionsModal] = useState(false);
-  const [lastQuestion, setLastQuestion] = useState('');
   const [activeEnhancement, setActiveEnhancement] = useState(null);
 
   useEffect(() => {
@@ -27,8 +25,7 @@ const OracleInterface = () => {
 
   const handleQuestionSubmit = async (question, directSubmit = false) => {
     try {
-      // Store the question for potential enhancement
-      setLastQuestion(question.trim());
+      // Store the question for potential enhancement (removed setLastQuestion as not needed)
       
       // Prepare enhancement data if active
       let enhancementData = null;
@@ -58,9 +55,7 @@ const OracleInterface = () => {
           setNewEarnings(coinResult.earningDetails);
         }
         
-        // Update session data
-        const updatedData = offeringsService.getSessionData();
-        setSessionData(updatedData);
+        // Update session data (removed sessionData state as it's handled by CoinBalance)
       } else if (response) {
         // Handle error response from Oracle context
         setCurrentResponse(response);
@@ -87,7 +82,7 @@ const OracleInterface = () => {
 
 
   const handleBalanceUpdate = (data) => {
-    setSessionData(data);
+    // Balance updates are handled by CoinBalance component itself
   };
 
   return (
