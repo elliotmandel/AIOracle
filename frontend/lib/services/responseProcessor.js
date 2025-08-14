@@ -104,11 +104,11 @@ class ResponseProcessor {
 
   addResponseTypeGuidance(prompt, responseType) {
     const guidance = {
-      directWisdom: "Be clear and actionable while maintaining mystical authority.",
-      metaphoricalRiddle: "Embed your wisdom in metaphors and symbolic language.",
-      tangentialInsight: "Approach the question from an unexpected but illuminating angle.",
-      absurdistPhilosophy: "Embrace beautiful paradoxes and surreal connections.",
-      pureNonsense: "Be delightfully absurd while somehow remaining oddly helpful."
+      directWisdom: "Be clear and actionable while maintaining mystical authority. Use minimal metaphor.",
+      metaphoricalRiddle: "Embed your wisdom using only 1-2 metaphors and symbolic language.",
+      tangentialInsight: "Approach the question from an unexpected but illuminating angle with minimal metaphor.",
+      absurdistPhilosophy: "Embrace one beautiful paradox and surreal connection.",
+      pureNonsense: "Be delightfully absurd while somehow remaining oddly helpful. Use one metaphor at most."
     };
 
     return `${prompt}\n\nResponse style: ${guidance[responseType.name] || guidance.directWisdom}`;
@@ -117,24 +117,21 @@ class ResponseProcessor {
   enhanceResponse(claudeResponse, persona, responseType, questionAnalysis, enhancements = null) {
     console.log('enhanceResponse called with enhancements:', enhancements);
     let enhancedText = claudeResponse.text;
-    let maxLength = 400;
+    let maxLength = 300; // Reduced from 400 for more concise responses
     
     // Apply offerings enhancements
     if (enhancements?.extendedResponse) {
-      maxLength = 800; // Double the length for candle/starlight offerings
+      maxLength = 600; // Reduced from 800 for more concise responses
     }
     
-    if (responseType.name === 'metaphoricalRiddle' && !enhancedText.includes('like') && !enhancedText.includes('as')) {
-      const metaphor = this.contextInjection.getRandomMetaphor();
-      enhancedText = `${enhancedText} Consider this ${metaphor}.`;
-    }
+    // Removed automatic metaphor injection to maintain max 2 metaphor limit
     
     if (questionAnalysis.sentiment === 'negative' && Math.random() < 0.3) {
       enhancedText += "\n\nRemember: even the darkest night gives way to dawn.";
     }
     
     if (enhancedText.length < 50 && responseType.name !== 'pureNonsense') {
-      enhancedText += ` The universe often speaks in whispers that grow louder with contemplation.`;
+      enhancedText += ` The universe speaks in whispers.`;
     }
     
     // Add Good Omens if enhancement is active
@@ -149,7 +146,7 @@ class ResponseProcessor {
     // Only truncate if not using extended response enhancement
     if (enhancedText.length > maxLength && !enhancements?.extendedResponse && !enhancements?.goodOmens && !enhancements?.good_omens) {
       const sentences = enhancedText.split('. ');
-      enhancedText = sentences.slice(0, 3).join('. ') + '.';
+      enhancedText = sentences.slice(0, 2).join('. ') + '.'; // Reduced from 3 to 2 sentences
     }
     
     return {
@@ -232,11 +229,11 @@ class ResponseProcessor {
 
   generateEmergencyResponse(question) {
     const emergencyResponses = [
-      "The cosmic servers are experiencing turbulence. Your question echoes in the void, awaiting clearer skies.",
-      "The Oracle's vision is clouded by temporal interference. Perhaps the answer lies in asking the question differently.",
-      "The mystical networks are realigning. Your inquiry has been heard, though the response travels through distant dimensions.",
-      "Even oracles must sometimes admit the limitations of mortal technology. The wisdom you seek exists, but requires patience.",
-      "The universe is buffering. Please hold while reality recalibrates its response algorithms."
+      "The cosmic servers are experiencing turbulence. Your question awaits clearer skies.",
+      "The Oracle's vision is clouded. Perhaps ask the question differently.",
+      "The mystical networks are realigning. Your inquiry travels through distant dimensions.",
+      "Even oracles must admit the limitations of mortal technology. The wisdom requires patience.",
+      "The universe is buffering. Reality recalibrates its response algorithms."
     ];
     
     return emergencyResponses[Math.floor(Math.random() * emergencyResponses.length)];
@@ -255,19 +252,19 @@ class ResponseProcessor {
     let enhancedPrompt = prompt;
     
     if (enhancements.extendedResponse) {
-      enhancedPrompt += "\n\nProvide a detailed, comprehensive response with multiple perspectives and deeper insights.";
+      enhancedPrompt += "\n\nProvide a detailed response with deeper insights, but use maximum 2 metaphors.";
     }
     
     if (enhancements.empathetic) {
-      enhancedPrompt += "\n\nSpeak with gentle compassion, addressing the human directly with empathy and emotional understanding. Use 'you' frequently and acknowledge their feelings.";
+      enhancedPrompt += "\n\nSpeak with gentle compassion, addressing the human directly with empathy. Use 'you' frequently and acknowledge their feelings. Limit metaphors to 2 maximum.";
     }
     
     if (enhancements.rarePersonas) {
-      enhancedPrompt += "\n\nDraw upon ancient wisdom, scholarly knowledge, and mystical insights from forgotten realms.";
+      enhancedPrompt += "\n\nDraw upon ancient wisdom and scholarly knowledge. Use maximum 2 metaphors.";
     }
     
     if (enhancements.goodOmens || enhancements.good_omens) {
-      enhancedPrompt += "\n\nProvide an uplifting, positive response that focuses on favorable outcomes and encouraging insights.";
+      enhancedPrompt += "\n\nProvide an uplifting, positive response with favorable outcomes. Use maximum 2 metaphors.";
     }
     
     return enhancedPrompt;

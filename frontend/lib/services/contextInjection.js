@@ -351,25 +351,25 @@ class ContextInjectionService {
   getRandomMetaphor(category = 'nature') {
     const metaphors = {
       nature: [
-        "like a river finding its way to the sea",
-        "as a seed that contains the entire forest",
-        "like the moon that waxes and wanes in perfect cycles",
-        "as mountains that stand firm while clouds pass",
-        "like the tide that retreats only to return stronger"
+        "like a river finding its way",
+        "as a seed containing potential",
+        "like the moon in cycles",
+        "as mountains standing firm",
+        "like the returning tide"
       ],
       technology: [
-        "like a network where each connection strengthens the whole",
-        "as code that executes in perfect logic",
-        "like a signal that travels instantly across vast distances",
-        "as data that becomes wisdom through processing",
-        "like a backup that preserves what matters most"
+        "like a network strengthening connections",
+        "as code executing logic",
+        "like a signal traveling instantly",
+        "as data becoming wisdom",
+        "like a backup preserving essence"
       ],
       cosmic: [
-        "like stars that shine brightest in the deepest darkness",
-        "as galaxies that spiral in eternal dance",
-        "like light that travels for eons to reach waiting eyes",
-        "as black holes that bend space and time around their mystery",
-        "like the cosmic background radiation that whispers the universe's origin story"
+        "like stars in darkness",
+        "as galaxies in spiral dance",
+        "like light reaching waiting eyes",
+        "as space bending around mystery",
+        "like cosmic whispers of origin"
       ]
     };
 
