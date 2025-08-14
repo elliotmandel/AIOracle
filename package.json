@@ -1,0 +1,20 @@
+{
+  "name": "ai-oracle-fullstack",
+  "version": "1.0.0",
+  "description": "AI Oracle - Mystical wisdom with progressive speech synthesis",
+  "scripts": {
+    "start": "cd backend && npm start",
+    "build": "cd backend && npm install",
+    "dev": "cd backend && npm run dev",
+    "install-backend": "cd backend && npm install",
+    "install-frontend": "cd frontend && npm install",
+    "install-all": "npm run install-backend && npm run install-frontend"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": ["ai", "oracle", "mystical", "api", "react", "nodejs"],
+  "author": "",
+  "license": "MIT"
+}
