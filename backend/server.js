@@ -33,7 +33,10 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 initializeDatabase();
 
 const oracleRoutes = require('./routes/oracle');
+const offeringsRoutes = require('./routes/offerings');
+
 app.use('/api', oracleRoutes);
+app.use('/api', offeringsRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'Oracle server is running', timestamp: new Date().toISOString() });

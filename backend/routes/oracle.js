@@ -8,7 +8,7 @@ const dbService = new DatabaseService();
 
 router.post('/ask', async (req, res) => {
   try {
-    const { question, sessionId } = req.body;
+    const { question, sessionId, offerings = [], enhancements = null, enhancement = null } = req.body;
 
     if (!question || question.trim().length === 0) {
       return res.status(400).json({
@@ -31,7 +31,24 @@ router.post('/ask', async (req, res) => {
       await dbService.updateSessionActivity(currentSessionId);
     }
 
-    const result = await responseProcessor.processQuestion(question, currentSessionId);
+    // Convert single enhancement to enhancements format for backward compatibility
+    let finalEnhancements = enhancements;
+    if (enhancement && enhancement.type) {
+      console.log('Enhancement received:', enhancement);
+      // Map enhancement types to offerings for the processor
+      const enhancementMap = {
+        'rare_persona': 'rare_persona',
+        'good_omens': 'good_omens'
+      };
+      
+      if (enhancementMap[enhancement.type]) {
+        const enhancementOffering = enhancementMap[enhancement.type];
+        finalEnhancements = { [enhancementOffering]: true };
+        console.log('Final enhancements:', finalEnhancements);
+      }
+    }
+
+    const result = await responseProcessor.processQuestion(question, currentSessionId, offerings, finalEnhancements);
 
     if (result.success) {
       const questionId = await dbService.saveQuestion({

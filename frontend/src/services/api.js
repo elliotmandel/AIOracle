@@ -32,11 +32,17 @@ api.interceptors.response.use(
 );
 
 export const oracleAPI = {
-  async askQuestion(question, sessionId = null) {
-    return await api.post('/ask', {
+  async askQuestion(question, sessionId = null, enhancement = null) {
+    const payload = {
       question: question.trim(),
       sessionId
-    });
+    };
+    
+    if (enhancement) {
+      payload.enhancement = enhancement;
+    }
+    
+    return await api.post('/ask', payload);
   },
 
   async getOracleState() {

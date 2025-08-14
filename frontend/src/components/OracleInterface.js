@@ -3,10 +3,18 @@ import { useOracle } from './OracleContext';
 import ResponseDisplay from './ResponseDisplay';
 import QuestionForm from './QuestionForm';
 import HistorySection from './HistorySection';
+import CoinBalance from './CoinBalance';
+import CoinRedemptionsModal from './CoinRedemptionsModal';
+import offeringsService from '../services/offeringsService';
 
 const OracleInterface = () => {
-  const { oracleState, isLoading, error, clearError } = useOracle();
+  const { oracleState, isLoading, error, clearError, askQuestion } = useOracle();
   const [currentResponse, setCurrentResponse] = useState(null);
+  const [sessionData, setSessionData] = useState(null);
+  const [newEarnings, setNewEarnings] = useState([]);
+  const [showRedemptionsModal, setShowRedemptionsModal] = useState(false);
+  const [lastQuestion, setLastQuestion] = useState('');
+  const [activeEnhancement, setActiveEnhancement] = useState(null);
 
   useEffect(() => {
     if (error) {
@@ -17,12 +25,75 @@ const OracleInterface = () => {
     }
   }, [error, clearError]);
 
-  const handleQuestionSubmit = async (response) => {
-    setCurrentResponse(response);
+  const handleQuestionSubmit = async (question, directSubmit = false) => {
+    try {
+      // Store the question for potential enhancement
+      setLastQuestion(question.trim());
+      
+      // Prepare enhancement data if active
+      let enhancementData = null;
+      if (activeEnhancement) {
+        enhancementData = {
+          type: activeEnhancement,
+          applied: true
+        };
+        // Clear the active enhancement after using it
+        setActiveEnhancement(null);
+      }
+      
+      // Use the Oracle context's askQuestion method with enhancement
+      const response = await askQuestion(question.trim(), enhancementData);
+      
+      if (response && response.success) {
+        setCurrentResponse(response);
+        
+        // Award coins for asking question
+        const coinResult = await offeringsService.awardCoins('ask_question', {
+          questionText: question.trim(),
+          questionLength: question.trim().split(' ').length
+        });
+        
+        // Show earning notifications if we have detailed earnings
+        if (coinResult.success && coinResult.earningDetails) {
+          setNewEarnings(coinResult.earningDetails);
+        }
+        
+        // Update session data
+        const updatedData = offeringsService.getSessionData();
+        setSessionData(updatedData);
+      } else if (response) {
+        // Handle error response from Oracle context
+        setCurrentResponse(response);
+      }
+    } catch (error) {
+      console.error('Question submission error:', error);
+      setCurrentResponse({
+        success: false,
+        error: error.message,
+        fallback: "Unable to reach the Oracle. Please try again."
+      });
+    }
+  };
+
+  const handleShowEnhancements = () => {
+    setShowRedemptionsModal(true);
+  };
+
+  const handleRedeemEnhancement = async (enhancementType) => {
+    // Set the active enhancement for the next question
+    setActiveEnhancement(enhancementType);
+  };
+
+
+
+  const handleBalanceUpdate = (data) => {
+    setSessionData(data);
   };
 
   return (
     <div className="oracle-container">
+      <CoinBalance onBalanceUpdate={handleBalanceUpdate} newEarnings={newEarnings} />
+      
       <div className="oracle-header">
         <h1 className="oracle-title">🔮 AI Oracle</h1>
         <p className="oracle-subtitle">
@@ -45,7 +116,7 @@ const OracleInterface = () => {
         </div>
       )}
 
-      <QuestionForm onResponse={handleQuestionSubmit} />
+      <QuestionForm onQuestionSubmit={handleQuestionSubmit} onShowEnhancements={handleShowEnhancements} activeEnhancement={activeEnhancement} />
 
       {error && (
         <div className="error-message">
@@ -69,6 +140,12 @@ const OracleInterface = () => {
       )}
 
       <HistorySection />
+      
+      <CoinRedemptionsModal
+        isOpen={showRedemptionsModal}
+        onClose={() => setShowRedemptionsModal(false)}
+        onRedeem={handleRedeemEnhancement}
+      />
     </div>
   );
 };

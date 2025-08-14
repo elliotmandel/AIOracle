@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useOracle } from './OracleContext';
 
-const QuestionForm = ({ onResponse }) => {
+const QuestionForm = ({ onQuestionSubmit, onShowEnhancements, activeEnhancement }) => {
   const [question, setQuestion] = useState('');
   const [lastQuestion, setLastQuestion] = useState('');
-  const { askQuestion, isLoading } = useOracle();
+  const { isLoading } = useOracle();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -13,27 +13,11 @@ const QuestionForm = ({ onResponse }) => {
       return;
     }
 
-    const response = await askQuestion(question);
-    
-    if (response) {
-      setLastQuestion(question);
-      onResponse(response);
-    }
-    
+    setLastQuestion(question);
+    await onQuestionSubmit(question);
     setQuestion('');
   };
 
-  const handleAskAgain = async () => {
-    if (!lastQuestion || isLoading) {
-      return;
-    }
-
-    const response = await askQuestion(lastQuestion);
-    
-    if (response) {
-      onResponse(response);
-    }
-  };
 
   const placeholderQuestions = [
     "What path should I take in life?",
@@ -50,8 +34,19 @@ const QuestionForm = ({ onResponse }) => {
     Math.floor(Math.random() * placeholderQuestions.length)
   ];
 
+  const enhancementNames = {
+    'rare_persona': 'Rare Persona',
+    'good_omens': 'Good Omens'
+  };
+
   return (
     <div className="question-section">
+      {activeEnhancement && (
+        <div className="active-enhancement-indicator">
+          ✨ {enhancementNames[activeEnhancement]} Enhancement Active
+        </div>
+      )}
+      
       <form onSubmit={handleSubmit} className="question-form">
         <textarea
           value={question}
@@ -71,16 +66,14 @@ const QuestionForm = ({ onResponse }) => {
             {isLoading ? 'Consulting the Oracle...' : 'Seek Wisdom'}
           </button>
           
-          {lastQuestion && (
-            <button
-              type="button"
-              onClick={handleAskAgain}
-              className="ask-again-button"
-              disabled={isLoading}
-            >
-              Ask Again for Different Perspective
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={onShowEnhancements}
+            className="enhance-oracle-button"
+            disabled={isLoading}
+          >
+            Enhance The Oracle
+          </button>
         </div>
         
         <div className="character-count">

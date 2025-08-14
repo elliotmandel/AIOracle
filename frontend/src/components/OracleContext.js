@@ -41,7 +41,7 @@ export const OracleProvider = ({ children }) => {
     }
   };
 
-  const askQuestion = async (question) => {
+  const askQuestion = async (question, enhancement = null) => {
     if (!question.trim()) {
       setError('Please enter a question');
       return null;
@@ -51,7 +51,7 @@ export const OracleProvider = ({ children }) => {
     setError(null);
 
     try {
-      const response = await oracleAPI.askQuestion(question, sessionId);
+      const response = await oracleAPI.askQuestion(question, sessionId, enhancement);
       
       if (response.success) {
         if (!sessionId) {
