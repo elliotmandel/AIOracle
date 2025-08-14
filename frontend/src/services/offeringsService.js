@@ -29,7 +29,7 @@ class OfferingsService {
   // Initialize session with server
   async initializeSession() {
     try {
-      const response = await fetch('/api/session/init', {
+      const response = await fetch('/api/init', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -91,7 +91,7 @@ class OfferingsService {
   // Spend coins on offerings
   async spendCoins(offerings, questionId) {
     try {
-      const response = await fetch(`/api/session/${this.sessionData.sessionId}/spend`, {
+      const response = await fetch(`/api/spend?sessionId=${this.sessionData.sessionId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ offerings, questionId })
@@ -132,8 +132,8 @@ class OfferingsService {
     }
     
     try {
-      console.log('Making API call to:', `/api/session/${this.sessionData.sessionId}/earn`);
-      const response = await fetch(`/api/session/${this.sessionData.sessionId}/earn`, {
+      console.log('Making API call to:', `/api/earn?sessionId=${this.sessionData.sessionId}`);
+      const response = await fetch(`/api/earn?sessionId=${this.sessionData.sessionId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ activity, metadata })
