@@ -121,14 +121,27 @@ class OfferingsService {
 
   // Award coins for activities
   async awardCoins(activity, metadata = {}) {
+    console.log('OfferingsService.awardCoins called:', { activity, metadata, sessionId: this.sessionData?.sessionId });
+    
+    if (!this.sessionData || !this.sessionData.sessionId) {
+      console.error('No session data available for coin award');
+      await this.initializeSession();
+      if (!this.sessionData || !this.sessionData.sessionId) {
+        return { success: false, error: 'Session initialization failed' };
+      }
+    }
+    
     try {
+      console.log('Making API call to:', `/api/session/${this.sessionData.sessionId}/earn`);
       const response = await fetch(`/api/session/${this.sessionData.sessionId}/earn`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ activity, metadata })
       });
 
+      console.log('API response status:', response.status);
       const data = await response.json();
+      console.log('API response data:', data);
       
       if (data.success) {
         // Update local session data

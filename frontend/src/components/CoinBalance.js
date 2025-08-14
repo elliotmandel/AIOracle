@@ -20,8 +20,10 @@ const CoinBalance = ({ onBalanceUpdate, newEarnings }) => {
   }, [newEarnings]);
 
   const initializeSession = async () => {
+    console.log('CoinBalance: Initializing session...');
     try {
       const data = await offeringsService.initializeSession();
+      console.log('CoinBalance: Session initialized:', data);
       setSessionData(data);
       
       if (onBalanceUpdate) {
