@@ -45,14 +45,20 @@ const OracleInterface = () => {
         setCurrentResponse(response);
         
         // Award coins for asking question
+        console.log('Attempting to award coins for question:', question.trim());
         const coinResult = await offeringsService.awardCoins('ask_question', {
           questionText: question.trim(),
           questionLength: question.trim().split(' ').length
         });
         
+        console.log('Coin result:', coinResult);
+        
         // Show earning notifications if we have detailed earnings
         if (coinResult.success && coinResult.earningDetails) {
+          console.log('Setting new earnings:', coinResult.earningDetails);
           setNewEarnings(coinResult.earningDetails);
+        } else {
+          console.error('Coin earning failed or no details:', coinResult);
         }
         
         // Update session data (removed sessionData state as it's handled by CoinBalance)

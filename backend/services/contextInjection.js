@@ -259,6 +259,18 @@ class ContextInjectionService {
   }
 
   generateContext(question, themes = [], persona = null) {
+    console.log('Generating context with knowledge base sizes:', {
+      scientific: this.scientificFacts.length,
+      historical: this.historicalWisdom.length,
+      mythological: this.mythologicalReferences.length,
+      modern: this.modernInsights.length,
+      trivia: this.randomTrivia.length,
+      economic: this.economicFacts.length,
+      art: this.artFacts.length,
+      literature: this.literatureFacts.length,
+      math: this.mathFacts.length
+    });
+
     const context = {
       scientific: this.selectRandomItems(this.scientificFacts, 1),
       historical: this.selectRandomItems(this.historicalWisdom, 1),
@@ -270,6 +282,12 @@ class ContextInjectionService {
       literature: this.selectRandomItems(this.literatureFacts, 1),
       math: this.selectRandomItems(this.mathFacts, 1)
     };
+
+    console.log('Generated context sample:', {
+      scientific: context.scientific[0]?.substring(0, 50) + '...',
+      economic: context.economic[0]?.substring(0, 50) + '...',
+      art: context.art[0]?.substring(0, 50) + '...',
+    });
 
     if (themes.includes('spiritual')) {
       context.spiritual = this.selectRandomItems([
