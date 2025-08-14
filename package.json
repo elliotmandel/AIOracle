@@ -4,7 +4,7 @@
   "description": "AI Oracle - Mystical wisdom with progressive speech synthesis",
   "scripts": {
     "start": "cd backend && npm start",
-    "build": "cd frontend && npm install && npm run build",
+    "build": "cd frontend && npm install && npm run build && cp -r build ../build",
     "dev": "cd backend && npm run dev",
     "install": "cd frontend && npm install",
     "install-backend": "cd backend && npm install",
