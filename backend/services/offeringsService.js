@@ -65,7 +65,14 @@ const EARNING_ACTIVITIES = {
 
 class OfferingsService {
   constructor() {
-    this.db = getDatabase();
+    console.log('OfferingsService: Initializing service...');
+    try {
+      this.db = getDatabase();
+      console.log('OfferingsService: Database connection established');
+    } catch (error) {
+      console.error('OfferingsService: Database connection failed:', error);
+      throw error;
+    }
   }
 
   // Initialize or get existing session

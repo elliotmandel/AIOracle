@@ -1,5 +1,5 @@
 {
-  "name": "ai-oracle-frontend",
+  "name": "ai-oracle-frontend", 
   "version": 2,
   "builds": [
     {
@@ -9,9 +9,17 @@
         "buildCommand": "npm run build",
         "distDir": "build"
       }
+    },
+    {
+      "src": "../backend/server.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "../backend/server.js"
+    },
     {
       "src": "/static/(.*)",
       "headers": {

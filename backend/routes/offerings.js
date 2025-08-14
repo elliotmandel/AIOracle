@@ -4,6 +4,21 @@ const { OfferingsService } = require('../services/offeringsService');
 
 const offeringsService = new OfferingsService();
 
+// Test endpoint to verify routes are loading
+router.get('/test-offerings', (req, res) => {
+  console.log('Offerings routes are working!');
+  res.json({ 
+    success: true, 
+    message: 'Offerings routes are loaded',
+    routes: [
+      'POST /api/session/init',
+      'POST /api/session/:sessionId/earn',
+      'POST /api/session/:sessionId/spend',
+      'GET /api/session/:sessionId/progress'
+    ]
+  });
+});
+
 // Initialize or resume session
 router.post('/session/init', async (req, res) => {
   try {
